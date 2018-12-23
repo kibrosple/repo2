@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mapper.UserMapper">
+    <!--查询所有-->
+    <select id="findAll" parameterType="pageBean" resultType="user">
+        SELECT * FROM  users
+        <where>
+            <if test="user!=null">
+                <if test="user.username!=null">
+                   and username LIKE '%${user.username}%'
+                </if>
+                <if test="user.address!=null">
+                    and address LIKE '%${user.address}%'
+                </if>
+                <if test="user.email!=null">
+                    and email LIKE '%${user.email}%'
+                </if>
+            </if>
+        </where>
+        limit #{start},#{rows}
+    </select>
+    <!--登录功能-->
+    <select id="login" parameterType="user" resultType="user">
+        select * from users where username=#{username} and password=#{password}
+    </select>
+    <!--保存用户-->
+    <insert id="saveUser" parameterType="user">
+
+    </insert>
+    <!--通过id找到用户-->
+    <select id="findUserById" parameterType="Integer" resultType="user">
+        select * from users WHERE id = #{id}
+    </select>
+    <!--更改用户-->
+    <update id="updateUser" parameterType="user" >
+        UPDATE users set gender = #{gender},age=#{age},address=#{address},qq=#{qq},email=#{email}
+         where id =#{id}
+    </update>
+    <!--添加用户-->
+    <insert id="addUser" parameterType="pageBean" >
+        INSERT INTO users values(null,#{user.name},#{user.gender},#{user.age},#{user.address},#{user.qq},#{user.email},null,null)
+    </insert>
+    <!--删除用户-->
+    <delete id="deleteUserById" parameterType="Integer">
+        delete  from users where id = #{id}
+    </delete>
+    <!--查询总页数-->
+    <select id="findTotalCount" parameterType="pageBean" resultType="Integer">
+        SELECT count(*) from users
+        <where>
+            <if test="user!=null">
+                <if test="user.username!=null">
+                    and username LIKE '%${user.username}%'
+                </if>
+                <if test="user.address!=null">
+                    and address LIKE '%${user.address}%'
+                </if>
+                <if test="user.email!=null">
+                    and email LIKE '%${user.email}%'
+                </if>
+            </if>
+        </where>
+    </select>
+</mapper>
